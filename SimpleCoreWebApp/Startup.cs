@@ -27,6 +27,35 @@ namespace SimpleCoreWebApp
         app.UseDeveloperExceptionPage();
       }
 
+      app.Use(async (context, next) =>
+      {
+        HttpRequest  req = context.Request;
+        HttpResponse rsp = context.Response;
+
+        if (req.Path == "/foo")
+        {
+          await rsp.WriteAsync($"Welcome to the Foo");
+        } else
+        {
+          await next();
+        }
+      });
+
+      app.Use(async (context, next) =>
+      {
+        HttpRequest req = context.Request;
+        HttpResponse rsp = context.Response;
+
+        if (req.Path == "/bar")
+        {
+          await rsp.WriteAsync($"Welcome to the Bar");
+        }
+        else
+        {
+          await next();
+        }
+      });
+
       app.Run(async (context) =>
       {
         await context.Response.WriteAsync($"Name is {component.Name}");
